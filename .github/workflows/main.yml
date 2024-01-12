@@ -16,7 +16,11 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Install Snyk CLI
         run: |
-          curl -o- https://install.snyk.io/cli/v1/install | bash
+          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+          chmod +x ./snyk
+          mv ./snyk /usr/local/bin/
+      - name: Authenticate Snyk CLI
+        run: snyk auth
       - name: Upload results to Snyk
         run: snyk test --json | snyk monitor
         env:
