@@ -14,5 +14,10 @@ jobs:
         uses: snyk/actions/maven@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-
+      - name: Install Snyk CLI
+        run: |
+          curl -o- https://install.snyk.io/cli/v1/install | bash
+      - name: Upload results to Snyk
+        run: snyk test --json | snyk monitor
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
