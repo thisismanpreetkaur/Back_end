@@ -16,7 +16,9 @@ jobs:
           chmod +x ./snyk
           mv ./snyk /usr/local/bin/
       - name: Authenticate Snyk CLI
-        run: snyk auth
+        run: |
+          echo "Snyk Token: $SNYK_TOKEN"
+          snyk auth --api-token=${{ secrets.SNYK_TOKEN }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Run Snyk to check for vulnerabilities
