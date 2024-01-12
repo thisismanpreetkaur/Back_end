@@ -22,9 +22,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Run Snyk to check for vulnerabilities
-        run: |
-          echo "Snyk Token: $SNYK_TOKEN"
-          snyk test --api-token=${{ secrets.SNYK_TOKEN }}
+        run: snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Upload results to Snyk
