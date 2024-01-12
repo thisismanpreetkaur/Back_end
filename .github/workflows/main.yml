@@ -10,11 +10,13 @@ jobs:
       - uses: actions/checkout@master
       - name: Give Permission
         run: chmod 777 ./mvnw
-      - name: Install Snyk CLI
+      - name: Setup Node.js
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - name: Install dependencies
         run: |
-          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
-          chmod +x ./snyk
-          mv ./snyk /usr/local/bin/
+          npm install -g snyk
       - name: Authenticate Snyk CLI
         run: |
           echo "Snyk Token: $SNYK_TOKEN"
