@@ -12,11 +12,13 @@ jobs:
 
       - name: Give Permission to Maven Wrapper
         run: chmod 777 ./mvnw
+
       - name: Install the Snyk CLI
         run: |
-          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
-          chmod +x ./snyk
-          mv ./snyk /usr/local/bin/
+          curl -LJO https://github.com/snyk/snyk/releases/latest/download/snyk-linux
+          chmod +x ./snyk-linux
+          sudo mv ./snyk-linux /usr/local/bin/snyk
+
       - name: Authenticate Snyk CLI
         run: |
           echo "Snyk Token: $SNYK_TOKEN"
