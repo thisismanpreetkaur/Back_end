@@ -12,16 +12,11 @@ jobs:
 
       - name: Give Permission to Maven Wrapper
         run: chmod 777 ./mvnw
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
+      - name: Install the Snyk CLI
         run: |
-          npm install -g snyk
-
+          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+          chmod +x ./snyk
+          mv ./snyk /usr/local/bin/
       - name: Authenticate Snyk CLI
         run: |
           echo "Snyk Token: $SNYK_TOKEN"
