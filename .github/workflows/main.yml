@@ -7,26 +7,33 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Give Permission
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Give Permission to Maven Wrapper
         run: chmod 777 ./mvnw
+
       - name: Setup Node.js
-      - uses: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
+
       - name: Install dependencies
         run: |
           npm install -g snyk
+
       - name: Authenticate Snyk CLI
         run: |
           echo "Snyk Token: $SNYK_TOKEN"
           snyk auth --api-token=${{ secrets.SNYK_TOKEN }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: Run Snyk to check for vulnerabilities
         run: snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: Upload results to Snyk
         run: snyk monitor
         env:
