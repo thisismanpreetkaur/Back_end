@@ -20,7 +20,7 @@ jobs:
       - name: Install and run Snyk
         run: |
           curl -LO https://static.snyk.io/cli/latest/snyk-linux
-          chmod +x ./snyk-linux
+          chmod 777 ./snyk-linux
           sudo mv ./snyk-linux /usr/local/bin/snyk
           npx snyk auth ${{ secrets.SNYK_TOKEN }}
           npx snyk test --org=yuvrajarora070
