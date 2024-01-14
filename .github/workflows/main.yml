@@ -1,26 +1,12 @@
 name: Example workflow for Maven using Snyk
-on:
+on: 
   workflow_dispatch
-
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Give Permission
-        run: chmod 777 ./mvnw
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
-      - name: Install and run Snyk
-        run: |
-          curl -LO https://static.snyk.io/cli/latest/snyk-linux
-          chmod 777 ./snyk-linux
-          sudo mv ./snyk-linux /usr/local/bin/snyk
-          npx snyk auth ${{ secrets.SNYK_TOKEN }}
-          npx snyk test --org=yuvrajarora070
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/maven-3-jdk-17@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
