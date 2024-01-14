@@ -1,10 +1,13 @@
 name: Example workflow using Snyk
-on: push
+on:
+  workflow_dispatch
+
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout code
+        uses: actions/checkout@master
       - name: Give Permission
         run: chmod 777 ./mvnw
       - name: Run Snyk to check for vulnerabilities
