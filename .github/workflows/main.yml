@@ -1,5 +1,4 @@
 name: Example workflow for Maven using Snyk
-
 on:
   workflow_dispatch
 
@@ -20,9 +19,7 @@ jobs:
           sudo mv ./snyk-linux /usr/local/bin/snyk
 
       - name: Authenticate Snyk CLI
-        run: |
-          echo "Snyk Token: $SNYK_TOKEN"
-          snyk auth --api-token=${{ secrets.SNYK_TOKEN }}
+        run: snyk auth
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
