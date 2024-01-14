@@ -10,11 +10,6 @@ jobs:
         uses: actions/checkout@master
       - name: Give Permission
         run: chmod 777 ./mvnw
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-         distribution: 'adopt'
-         java-version: '11'
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
