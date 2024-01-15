@@ -1,6 +1,8 @@
 name: Example workflow using Snyk
+
 on:
   workflow_dispatch
+
 jobs:
   security:
     runs-on: ubuntu-latest
@@ -15,9 +17,10 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: monitor
-   sonarqube:
+
+  sonarqube:
     runs-on: ubuntu-latest
-    needs: snyk
+    needs: security
     outputs:
       artifacts: ${{ steps.sonarqube.outputs.artifacts }}
     steps:
@@ -29,23 +32,25 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-    #   - name: Cache SonarQube packages
-    #     uses: actions/cache@v1
-    #     with:
-    #       path: ~/.sonar/cache
-    #       key: ${{ runner.os }}-sonar
-    #       restore-keys: ${{ runner.os }}-sonar
+      # Uncomment the following lines if you want to use cache for SonarQube packages
+      # - name: Cache SonarQube packages
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~/.sonar/cache
+      #     key: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar
       - name: Build and analyze with SonarQube
         id: sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-
+    
       - name: Upload SonarQube Report as Artifact
         uses: actions/upload-artifact@v2
         with:
           name: sonarqube-report
           path: target/sonar
-    #   - name: Set output for downstream jobs
-    #     run: echo "artifacts=sonarqube-report" >> $GITHUB_ENV
+      # Uncomment the following lines if you want to set output for downstream jobs
+      # - name: Set output for downstream jobs
+      #   run: echo "artifacts=sonarqube-report" >> $GITHUB_ENV
