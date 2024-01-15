@@ -1,0 +1,47 @@
+name: Sonar-scanning-with-caching
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sonar_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Cache SonarQube scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v2
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-sonar-
+
+      - name: Install SonarQube scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        run: |
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:install -Dmaven.test.skip=true
+
+      - name: Build and analyze
+        run: |
+          mvn clean install sonar:sonar \
+            -Dsonar.projectKey=DevOps_pipeline \
+            # -Dsonar.organization=your_organization_key \
+            -Dsonar.host.url= ${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
